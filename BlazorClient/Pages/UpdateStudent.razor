@@ -1,0 +1,66 @@
+﻿@page "/update/{id}"
+@inject HttpClient httpClient
+@inject NavigationManager NavManager
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (student != null)
+            {
+                <h1 class="mb-4">Update Student</h1>
+                <p class="text-muted">ID: @Id</p>
+
+                <EditForm Model="@student" OnValidSubmit="@HandleUpdate">
+                    <DataAnnotationsValidator />
+                    <ValidationSummary class="alert alert-danger" />
+
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <InputText class="form-control" id="firstName" @bind-Value="@student!.FirstName" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <InputText class="form-control" id="lastName" @bind-Value="@student.LastName" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="school" class="form-label">School</label>
+                        <InputText class="form-control" id="school" @bind-Value="@student.School" />
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success">Update</button>
+                        <button type="button" class="btn btn-secondary"
+                                @onclick="@(() => NavManager.NavigateTo("/"))">Cancel</button>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <p><em>Loading...</em></p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private async void HandleUpdate()
+    {
+        await httpClient.PutAsJsonAsync($"api/students/{student!.StudentId}", student);
+
+        NavManager.NavigateTo("/");
+    }
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+
+    Student? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await httpClient.GetFromJsonAsync<Student>($"api/students/{Id}");
+    }
+}

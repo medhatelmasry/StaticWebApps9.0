@@ -1,0 +1,51 @@
+﻿@page "/add"
+@inject HttpClient httpClient
+@inject NavigationManager NavManager
+
+<PageTitle>Add students</PageTitle>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <h1 class="mb-4">Add Student</h1>
+
+            <EditForm Model="@student" OnValidSubmit="@HandleAdd">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="alert alert-danger" />
+
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <InputText class="form-control" id="firstName" @bind-Value="@student.FirstName" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <InputText class="form-control" id="lastName" @bind-Value="@student.LastName" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="school" class="form-label">School</label>
+                    <InputText class="form-control" id="school" @bind-Value="@student.School" />
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">Add Student</button>
+                    <button type="button" class="btn btn-secondary"
+                            @onclick="@(() => NavManager.NavigateTo("/"))">Cancel</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Student student = new Student();
+
+    private async void HandleAdd()
+    {
+        await httpClient.PostAsJsonAsync($"api/students", student);
+
+        // redirect to students page
+        NavManager.NavigateTo("/");
+    }
+}

@@ -1,0 +1,48 @@
+﻿@page "/delete/{id}"
+@inject HttpClient httpClient
+@inject NavigationManager NavManager
+
+<p>Student with ID == @Id</p>
+
+@if (student != null) // Delete form
+{
+    <h1>Delete</h1>
+    <table>
+        <tr>
+            <td>First Name</td>
+            <td>@student.FirstName</td>
+        </tr>
+        <tr>
+            <td>Last Name</td>
+            <td>@student.LastName</td>
+        </tr>
+        <tr>
+            <td>School</td>
+            <td>@student.School</td>
+        </tr>
+    </table>
+    <EditForm Model="@student" OnValidSubmit="@HandleDelete">
+
+<button type="submit" value="Delete" class="btn btn-danger">Delete</button>
+<button type="button" class="btn btn-secondary" @onclick="@(() => NavManager.NavigateTo("/"))">Cancel</button>
+
+@code {
+    protected async void HandleDelete()
+    {
+        await httpClient.DeleteAsync($"api/students/{student!.StudentId}");
+        NavManager.NavigateTo("/");
+    }
+}
+</EditForm>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+    Student? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await httpClient.GetFromJsonAsync<Student>($"api/students/{Id}");
+    }
+}

@@ -1,0 +1,73 @@
+﻿@page "/"
+
+@inject HttpClient Http
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+
+<PageTitle>Students</PageTitle>
+
+<h1>Students</h1>
+
+@if (schoolStudents == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <p>There are @filtered.Count() students.</p>
+
+    <div class="search-box">
+        <input class="form-control me-sm-2 " style="width: 95%" type="search" autofocus @bind="itemsFilter"
+               @bind:event="oninput" placeholder="Search Filter ..." />
+    </div>
+
+    <QuickGrid Items="@filtered" Pagination="@pagination">
+        <PropertyColumn Title="ID" Property="@(_ => _.StudentId)" Sortable="true" />
+        <PropertyColumn Title="First Name" Property="@(_ => _.FirstName)" Sortable="true" />
+        <PropertyColumn Title="Last Name" Property="@(_ => _.LastName)" Sortable="true" />
+        <PropertyColumn Title="School" Property="@(_ => _.School)" Sortable="true" />
+        <TemplateColumn Context="student">
+            <a href="@($"/update/{student.StudentId}")" class="btn btn-outline-primary">Edit</a>
+            <a href="@($"/delete/{student.StudentId}")" class="btn btn-outline-danger">Delete</a>
+        </TemplateColumn>
+    </QuickGrid>
+    <Paginator State="@pagination" />
+}
+
+@code {
+    private Student[]? schoolStudents;
+    string itemsFilter = "";
+    private PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        schoolStudents = await Http.GetFromJsonAsync<Student[]>($"api/students");
+    }
+
+    private IQueryable<Student> filtered
+    {
+        get
+        {
+            if (schoolStudents == null || !schoolStudents.Any())
+            {
+                return Enumerable.Empty<Student>().AsQueryable();
+            }
+
+            if (string.IsNullOrEmpty(itemsFilter))
+            {
+                return schoolStudents!.AsQueryable();
+            }
+            else
+            {
+                var filteredList = schoolStudents!.AsQueryable()
+                .Where(
+                b => b.FirstName!.Contains(itemsFilter, StringComparison.CurrentCultureIgnoreCase)
+                || b.LastName!.Contains(itemsFilter, StringComparison.CurrentCultureIgnoreCase)
+                || b.School!.Contains(itemsFilter, StringComparison.CurrentCultureIgnoreCase)
+                );
+                return filteredList;
+            }
+        }
+    }
+}
