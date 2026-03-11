@@ -24,7 +24,7 @@ static string GetBaseUrl(string? currentUrl = null)
 {
     if (string.IsNullOrEmpty(currentUrl))
     {
-        return "/api/"; // Default to API path for production
+        return "http://localhost:7071/api/";
     }
 
     // If running on localhost, use the local functions API
@@ -33,6 +33,7 @@ static string GetBaseUrl(string? currentUrl = null)
         return "http://localhost:7071/api/";
     }
 
-    // For Azure Static Web App or production, use API path
-    return "/api/";
+    // For Azure Static Web App or production, extract origin and construct absolute URL
+    var uri = new Uri(currentUrl);
+    return $"{uri.Scheme}://{uri.Host}{(uri.Port != 80 && uri.Port != 443 ? $":{uri.Port}" : "")}/api/";
 }
