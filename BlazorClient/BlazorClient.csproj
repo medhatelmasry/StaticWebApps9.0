@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <OverrideHtmlAssetPlaceholders>true</OverrideHtmlAssetPlaceholders>
+    <BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,5 +17,6 @@
   <ItemGroup>
     <ProjectReference Include="../SchoolLibrary/SchoolLibrary.csproj" />
   </ItemGroup>
+
 
 </Project>
