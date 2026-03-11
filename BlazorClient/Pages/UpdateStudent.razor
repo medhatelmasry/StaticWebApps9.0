@@ -47,7 +47,7 @@
 @code {
     private async void HandleUpdate()
     {
-        await httpClient.PutAsJsonAsync($"api/students/{student!.StudentId}", student);
+        await httpClient.PutAsJsonAsync($"students/{student!.StudentId}", student);
 
         NavManager.NavigateTo("/");
     }
@@ -61,6 +61,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        student = await httpClient.GetFromJsonAsync<Student>($"api/students/{Id}");
+        student = await httpClient.GetFromJsonAsync<Student>($"students/{Id}");
     }
 }

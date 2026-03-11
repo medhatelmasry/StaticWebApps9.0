@@ -24,15 +24,15 @@ static string GetBaseUrl(string? currentUrl = null)
 {
     if (string.IsNullOrEmpty(currentUrl))
     {
-        return "/"; // Default to relative URL for production
+        return "/api/"; // Default to API path for production
     }
 
     // If running on localhost, use the local functions API
     if (currentUrl.Contains("localhost", StringComparison.OrdinalIgnoreCase))
     {
-        return "http://localhost:7071/";
+        return "http://localhost:7071/api/";
     }
 
-    // For Azure Static Web App or production, use relative URL
-    return "/";
+    // For Azure Static Web App or production, use API path
+    return "/api/";
 }

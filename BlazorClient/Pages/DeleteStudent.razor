@@ -29,7 +29,7 @@
 @code {
     protected async void HandleDelete()
     {
-        await httpClient.DeleteAsync($"api/students/{student!.StudentId}");
+        await httpClient.DeleteAsync($"students/{student!.StudentId}");
         NavManager.NavigateTo("/");
     }
 }
@@ -43,6 +43,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        student = await httpClient.GetFromJsonAsync<Student>($"api/students/{Id}");
+        student = await httpClient.GetFromJsonAsync<Student>($"students/{Id}");
     }
 }

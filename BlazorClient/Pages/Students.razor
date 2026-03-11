@@ -42,7 +42,7 @@ else
     protected override async Task OnInitializedAsync()
     {
 
-        schoolStudents = await Http.GetFromJsonAsync<Student[]>($"api/students");
+        schoolStudents = await Http.GetFromJsonAsync<Student[]>($"students");
     }
 
     private IQueryable<Student> filtered

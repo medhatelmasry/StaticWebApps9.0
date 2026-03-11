@@ -43,7 +43,7 @@
 
     private async void HandleAdd()
     {
-        await httpClient.PostAsJsonAsync($"api/students", student);
+        await httpClient.PostAsJsonAsync($"students", student);
 
         // redirect to students page
         NavManager.NavigateTo("/");
